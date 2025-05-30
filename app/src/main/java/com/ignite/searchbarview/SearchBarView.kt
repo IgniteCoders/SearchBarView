@@ -3,6 +3,7 @@ package com.ignite.searchbarview
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -31,8 +32,8 @@ class SearchBarView @JvmOverloads constructor(
     private var onQueryTextSubmitListener: OnQueryTextSubmitListener? = null
 
     // Funciones lambda para un uso más moderno
-    private var onQueryTextChange: ((String) -> Unit)? = null
-    private var onQueryTextSubmit: ((String) -> Unit)? = null
+    private var onQueryTextChange: ((newText: String) -> Unit)? = null
+    private var onQueryTextSubmit: ((query: String) -> Unit)? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_search_bar, this, true)
@@ -48,11 +49,35 @@ class SearchBarView @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
+        // Configurar el EditText para propagar el evento de touch al touchFeedback
+        editText.setOnTouchListener { view, event ->
+            // Crear un nuevo evento con las coordenadas transformadas
+            createTransformedTouchEvent(view, event)?.let { transformedEvent ->
+                touchFeedback.dispatchTouchEvent(transformedEvent)
+            }
+            // Permitir que el EditText también procese el evento
+            false
+        }
+
         editText.addTextChangedListener { text ->
             val query = text?.toString() ?: ""
             iconClear.isVisible = query.isNotEmpty()
             onQueryTextChangeListener?.onQueryTextChange(query)
             onQueryTextChange?.invoke(query)
+        }
+
+        // Configurar el iconClear para propagar el evento de touch al touchFeedback
+        iconClear.setOnTouchListener { view, event ->
+            // Crear un nuevo evento con las coordenadas transformadas
+            createTransformedTouchEvent(view, event)?.let { transformedEvent ->
+                touchFeedback.dispatchTouchEvent(transformedEvent)
+            }
+            // Si es un click, realizar la acción de borrar
+            if (event.action == MotionEvent.ACTION_UP) {
+                view.performClick()
+            }
+            // Permitir que el iconClear también procese el evento
+            false
         }
 
         iconClear.setOnClickListener {
@@ -76,6 +101,30 @@ class SearchBarView @JvmOverloads constructor(
         touchFeedback.setOnClickListener {
             editText.requestFocus()
         }
+    }
+
+    private fun createTransformedTouchEvent(view: View, event: MotionEvent): MotionEvent? {
+        // Obtener las coordenadas del view origen en la pantalla
+        val viewCoords = IntArray(2)
+        view.getLocationOnScreen(viewCoords)
+
+        // Obtener las coordenadas del touchFeedback en la pantalla
+        val feedbackCoords = IntArray(2)
+        touchFeedback.getLocationOnScreen(feedbackCoords)
+
+        // Calcular la diferencia de coordenadas
+        val x = event.rawX - feedbackCoords[0]
+        val y = event.rawY - feedbackCoords[1]
+
+        // Crear un nuevo evento con las coordenadas transformadas
+        return MotionEvent.obtain(
+            event.downTime,
+            event.eventTime,
+            event.action,
+            x,
+            y,
+            event.metaState
+        )
     }
 
     private fun initializeAttributes(attrs: AttributeSet?) {
