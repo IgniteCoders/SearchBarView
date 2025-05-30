@@ -21,5 +21,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         searchBarView = findViewById(R.id.searchBar)
+
+        searchBarView.setOnQueryTextChangeListener { newText ->
+            println("TextChange: $newText")
+        }
+        searchBarView.setOnQueryTextSubmitListener { query ->
+            println("TextSubmit: $query")
+        }
     }
 }

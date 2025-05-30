@@ -26,8 +26,13 @@ class SearchBarView @JvmOverloads constructor(
     private val iconClear: ImageView
     private val touchFeedback: View
 
-    private var onQueryTextListener: OnQueryTextListener? = null
-    private var onSearchActionListener: OnSearchActionListener? = null
+    // Interfaces para compatibilidad con código existente
+    private var onQueryTextChangeListener: OnQueryTextChangeListener? = null
+    private var onQueryTextSubmitListener: OnQueryTextSubmitListener? = null
+
+    // Funciones lambda para un uso más moderno
+    private var onQueryTextChange: ((String) -> Unit)? = null
+    private var onQueryTextSubmit: ((String) -> Unit)? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_search_bar, this, true)
@@ -44,19 +49,24 @@ class SearchBarView @JvmOverloads constructor(
 
     private fun setupListeners() {
         editText.addTextChangedListener { text ->
-            iconClear.isVisible = !text.isNullOrEmpty()
-            onQueryTextListener?.onQueryTextChange(text?.toString() ?: "")
+            val query = text?.toString() ?: ""
+            iconClear.isVisible = query.isNotEmpty()
+            onQueryTextChangeListener?.onQueryTextChange(query)
+            onQueryTextChange?.invoke(query)
         }
 
         iconClear.setOnClickListener {
             editText.text?.clear()
-            onQueryTextListener?.onQueryTextChange("")
+            onQueryTextChangeListener?.onQueryTextChange("")
+            onQueryTextChange?.invoke("")
             iconClear.isVisible = false
         }
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                onSearchActionListener?.onSearchAction(editText.text.toString())
+                val query = editText.text.toString()
+                onQueryTextSubmitListener?.onQueryTextSubmit(query)
+                onQueryTextSubmit?.invoke(query)
                 true
             } else {
                 false
@@ -145,19 +155,30 @@ class SearchBarView @JvmOverloads constructor(
         editText.setText(text)
     }
 
-    fun setOnQueryTextListener(listener: OnQueryTextListener) {
-        this.onQueryTextListener = listener
+    // Métodos para establecer listeners usando interfaces
+    fun setOnQueryTextChangeListener(listener: OnQueryTextChangeListener) {
+        this.onQueryTextChangeListener = listener
     }
 
-    fun setOnSearchActionListener(listener: OnSearchActionListener) {
-        this.onSearchActionListener = listener
+    fun setOnQueryTextSubmitListener(listener: OnQueryTextSubmitListener) {
+        this.onQueryTextSubmitListener = listener
     }
 
-    interface OnQueryTextListener {
+    // Métodos para establecer listeners usando funciones lambda
+    fun setOnQueryTextChangeListener(listener: (newText: String) -> Unit) {
+        this.onQueryTextChange = listener
+    }
+
+    fun setOnQueryTextSubmitListener(listener: (query: String) -> Unit) {
+        this.onQueryTextSubmit = listener
+    }
+
+    // Interfaces
+    interface OnQueryTextChangeListener {
         fun onQueryTextChange(newText: String)
     }
 
-    interface OnSearchActionListener {
-        fun onSearchAction(query: String)
+    interface OnQueryTextSubmitListener {
+        fun onQueryTextSubmit(query: String)
     }
 }
