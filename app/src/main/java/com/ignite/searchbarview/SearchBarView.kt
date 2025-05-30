@@ -1,6 +1,10 @@
 package com.ignite.searchbarview
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Typeface
+import android.text.InputFilter
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -9,8 +13,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.core.widget.TextViewCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
@@ -22,10 +29,11 @@ class SearchBarView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val editText: EditText
-    private val iconSearch: ImageView
     private val cardView: MaterialCardView
+    private val iconSearch: ImageView
     private val iconClear: ImageView
     private val touchFeedback: View
+    private val contentLayout: LinearLayout
 
     // Interfaces para compatibilidad con código existente
     private var onQueryTextChangeListener: OnQueryTextChangeListener? = null
@@ -43,6 +51,7 @@ class SearchBarView @JvmOverloads constructor(
         cardView = findViewById(R.id.cardView)
         iconClear = findViewById(R.id.iconClear)
         touchFeedback = findViewById(R.id.touchFeedback)
+        contentLayout = findViewById(R.id.contentLayout)
 
         setupListeners()
         initializeAttributes(attrs)
@@ -131,71 +140,261 @@ class SearchBarView @JvmOverloads constructor(
 
     private fun initializeAttributes(attrs: AttributeSet?) {
         context.withStyledAttributes(attrs, R.styleable.SearchBarView) {
-            // Appearance
-            var hint = getString(R.styleable.SearchBarView_searchHint)
+            // Basic
+            val text = getResourceId(R.styleable.SearchBarView_text, 0)
+            if (text != 0) {
+                editText.setText(text)
+            }
+            
+            val hint = getResourceId(R.styleable.SearchBarView_hint, com.google.android.material.R.string.abc_search_hint)
+            if (hint != 0) {
+                editText.setHint(hint)
+            }
+            
+            // Text Appearance
             val textColor = getColor(
-                R.styleable.SearchBarView_searchTextColor,
+                R.styleable.SearchBarView_textColor,
                 MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurface, 0)
             )
             val hintTextColor = getColor(
-                R.styleable.SearchBarView_searchHintTextColor,
+                R.styleable.SearchBarView_hintTextColor,
                 MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurfaceVariant, 0)
             )
-            val bgColor = getColor(
-                R.styleable.SearchBarView_searchBackgroundColor,
+            editText.setTextColor(textColor)
+            editText.setHintTextColor(hintTextColor)
+            
+            val textAppearance = getResourceId(R.styleable.SearchBarView_textAppearance, 0)
+            if (textAppearance != 0) {
+                TextViewCompat.setTextAppearance(editText, textAppearance)
+            }
+
+            val textSize = getDimension(R.styleable.SearchBarView_textSize, 0f)
+            if (textSize > 0) {
+                editText.textSize = textSize
+            }
+
+            val textStyle = getInt(R.styleable.SearchBarView_textStyle, Typeface.NORMAL)
+            editText.setTypeface(editText.typeface, textStyle)
+
+            val fontFamily = getResourceId(R.styleable.SearchBarView_textFont, 0)
+            if (fontFamily != 0) {
+                editText.typeface = resources.getFont(fontFamily)
+            }
+
+            // Icons
+            val leadingIconSize = getDimensionPixelSize(
+                R.styleable.SearchBarView_leadingIconSize,
+                resources.getDimensionPixelSize(R.dimen.search_bar_icon_size_default)
+            )
+            val leadingIconPadding = getDimensionPixelSize(
+                R.styleable.SearchBarView_leadingIconPadding,
+                resources.getDimensionPixelSize(R.dimen.search_bar_icon_padding_default)
+            )
+            iconSearch.updateLayoutParams {
+                width = leadingIconSize
+                height = leadingIconSize
+            }
+            iconSearch.setPadding(leadingIconPadding, leadingIconPadding, leadingIconPadding, leadingIconPadding)
+            
+            val clearIconSize = getDimensionPixelSize(
+                R.styleable.SearchBarView_clearIconSize,
+                resources.getDimensionPixelSize(R.dimen.search_bar_icon_size_default)
+            )
+            val clearIconPadding = getDimensionPixelSize(
+                R.styleable.SearchBarView_clearIconPadding,
+                resources.getDimensionPixelSize(R.dimen.search_bar_icon_padding_default)
+            )
+            iconClear.updateLayoutParams {
+                width = clearIconSize
+                height = clearIconSize
+            }
+            iconClear.setPadding(clearIconPadding, clearIconPadding, clearIconPadding, clearIconPadding)
+            
+            val iconTint = getColor(
+                R.styleable.SearchBarView_iconTint,
+                MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurfaceVariant, 0)
+            )
+            iconSearch.imageTintList = ColorStateList.valueOf(iconTint)
+            iconClear.imageTintList = ColorStateList.valueOf(iconTint)
+
+            // Layout
+            val height = getDimensionPixelSize(
+                R.styleable.SearchBarView_height,
+                resources.getDimensionPixelSize(R.dimen.search_bar_height_default)
+            )
+            val paddingHorizontal = getDimensionPixelSize(
+                R.styleable.SearchBarView_paddingHorizontal,
+                resources.getDimensionPixelSize(R.dimen.search_bar_padding_horizontal_default)
+            )
+            val paddingVertical = getDimensionPixelSize(
+                R.styleable.SearchBarView_paddingVertical,
+                resources.getDimensionPixelSize(R.dimen.search_bar_padding_vertical_default)
+            )
+            val elevation = getDimension(
+                R.styleable.SearchBarView_elevation,
+                resources.getDimension(R.dimen.search_bar_elevation_default)
+            )
+
+            cardView.updateLayoutParams {
+                this.height = height
+            }
+            contentLayout.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
+            cardView.elevation = elevation
+
+            val backgroundColor = getColor(
+                R.styleable.SearchBarView_backgroundColor,
                 MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurfaceVariant, 0)
             )
             val strokeColor = getColor(
-                R.styleable.SearchBarView_searchStrokeColor,
+                R.styleable.SearchBarView_strokeColor,
                 MaterialColors.getColor(context, com.google.android.material.R.attr.colorOutline, 0)
             )
-            val strokeWidth = getDimension(R.styleable.SearchBarView_searchStrokeWidth, 0f)
-            val iconTint = getColor(
-                R.styleable.SearchBarView_searchIconTint,
-                MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurfaceVariant, 0)
+            val strokeWidth = getDimensionPixelSize(
+                R.styleable.SearchBarView_strokeWidth,
+                resources.getDimensionPixelSize(R.dimen.search_bar_stroke_width_default)
             )
-            val searchIcon = getResourceId(R.styleable.SearchBarView_searchIcon, R.drawable.ic_search)
-            val clearIcon = getResourceId(R.styleable.SearchBarView_searchClearIcon, R.drawable.ic_clear)
             val cornerRadius = getDimension(
-                R.styleable.SearchBarView_searchCornerRadius,
-                resources.getDimension(R.dimen.search_bar_height) / 2
+                R.styleable.SearchBarView_cornerRadius,
+                resources.getDimension(R.dimen.search_bar_corner_radius_default)
             )
 
-            // Behavior
-            val isEnabled = getBoolean(R.styleable.SearchBarView_searchEnabled, true)
-            val isSingleLine = getBoolean(R.styleable.SearchBarView_searchSingleLine, true)
-            val imeOptions = getInt(R.styleable.SearchBarView_searchImeOptions, EditorInfo.IME_ACTION_SEARCH)
+            cardView.setCardBackgroundColor(backgroundColor)
+            cardView.strokeColor = strokeColor
+            cardView.strokeWidth = strokeWidth
+            cardView.radius = cornerRadius
 
-            // Apply attributes
-            editText.apply {
-                hint = hint ?: context.getString(R.string.search_hint)
-                setTextColor(textColor)
-                setHintTextColor(hintTextColor)
-                this.isEnabled = isEnabled
-                maxLines = if (isSingleLine) 1 else Int.MAX_VALUE
-                this.imeOptions = imeOptions
-            }
+            // Input configuration
+            val maxLines = getInt(R.styleable.SearchBarView_maxLines, Int.MAX_VALUE)
+            val maxLength = getInt(R.styleable.SearchBarView_maxLength, -1)
+            val inputType = getInt(R.styleable.SearchBarView_inputType, InputType.TYPE_CLASS_TEXT)
+            val imeOptions = getInt(R.styleable.SearchBarView_imeOptions, EditorInfo.IME_ACTION_SEARCH)
 
-            iconSearch.apply {
-                setImageResource(searchIcon)
-                setColorFilter(iconTint)
+            editText.maxLines = maxLines
+            if (maxLength > 0) {
+                editText.filters = arrayOf(InputFilter.LengthFilter(maxLength))
             }
+            editText.inputType = inputType
+            editText.imeOptions = imeOptions
 
-            iconClear.apply {
-                setImageResource(clearIcon)
-                setColorFilter(iconTint)
-                isClickable = true
-                isFocusable = true
-            }
-
-            cardView.apply {
-                setCardBackgroundColor(bgColor)
-                this.strokeWidth = strokeWidth.toInt()
-                this.strokeColor = strokeColor
-                radius = cornerRadius
-                elevation = 0f
-            }
+            // States
+            val isEnabled = getBoolean(R.styleable.SearchBarView_enabled, true)
+            setEnabled(isEnabled)
         }
+    }
+
+    // Public API para modificar atributos
+
+    fun setHint(hint: String) {
+        editText.hint = hint
+    }
+
+    fun setLeadingIcon(resourceId: Int) {
+        iconSearch.setImageResource(resourceId)
+    }
+
+    fun setClearIcon(resourceId: Int) {
+        iconClear.setImageResource(resourceId)
+    }
+
+    fun setLeadingIconSize(size: Int) {
+        iconSearch.updateLayoutParams {
+            width = size
+            height = size
+        }
+    }
+
+    fun setClearIconSize(size: Int) {
+        iconClear.updateLayoutParams {
+            width = size
+            height = size
+        }
+    }
+
+    fun setLeadingIconPadding(padding: Int) {
+        iconSearch.setPadding(padding, padding, padding, padding)
+    }
+
+    fun setClearIconPadding(padding: Int) {
+        iconClear.setPadding(padding, padding, padding, padding)
+    }
+
+    fun setHeight(height: Int) {
+        cardView.updateLayoutParams {
+            this.height = height
+        }
+    }
+
+    fun setPadding(horizontal: Int, vertical: Int) {
+        contentLayout.setPadding(horizontal, vertical, horizontal, vertical)
+    }
+
+    override fun setElevation(elevation: Float) {
+        cardView.elevation = elevation
+    }
+
+    fun setCornerRadius(radius: Float) {
+        cardView.radius = radius
+    }
+
+    override fun setBackgroundColor(color: Int) {
+        cardView.setCardBackgroundColor(color)
+    }
+
+    fun setStrokeColor(color: Int) {
+        cardView.strokeColor = color
+    }
+
+    fun setStrokeWidth(width: Int) {
+        cardView.strokeWidth = width
+    }
+
+    fun setTextColor(color: Int) {
+        editText.setTextColor(color)
+    }
+
+    fun setHintTextColor(color: Int) {
+        editText.setHintTextColor(color)
+    }
+
+    fun setIconTint(color: Int) {
+        iconSearch.imageTintList = ColorStateList.valueOf(color)
+        iconClear.imageTintList = ColorStateList.valueOf(color)
+    }
+
+    fun setTextAppearance(resId: Int) {
+        TextViewCompat.setTextAppearance(editText, resId)
+    }
+
+    fun setTextSize(size: Float) {
+        editText.textSize = size
+    }
+
+    fun setFontFamily(resId: Int) {
+        editText.typeface = resources.getFont(resId)
+    }
+
+    fun setMaxLines(maxLines: Int) {
+        editText.maxLines = maxLines
+    }
+
+    fun setMaxLength(maxLength: Int) {
+        editText.filters = arrayOf(InputFilter.LengthFilter(maxLength))
+    }
+
+    fun setInputType(inputType: Int) {
+        editText.inputType = inputType
+    }
+
+    fun setImeOptions(imeOptions: Int) {
+        editText.imeOptions = imeOptions
+    }
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        editText.isEnabled = enabled
+        iconSearch.isEnabled = enabled
+        iconClear.isEnabled = enabled
+        alpha = if (enabled) 1f else 0.5f
     }
 
     // Public API

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SearchBarView default dimensions -->
+    <dimen name="search_bar_padding_horizontal_default">16dp</dimen>
+    <dimen name="search_bar_padding_vertical_default">0dp</dimen>
+    <dimen name="search_bar_elevation_default">0dp</dimen>
+    <dimen name="search_bar_height_default">56dp</dimen>
+    <dimen name="search_bar_corner_radius_default">28dp</dimen>
+    <dimen name="search_bar_icon_size_default">24dp</dimen>
+    <dimen name="search_bar_icon_padding_default">0dp</dimen>
+    <dimen name="search_bar_stroke_width_default">0dp</dimen>
+</resources> 
