@@ -51,9 +51,11 @@ class SearchBarView @JvmOverloads constructor(
     private fun setupListeners() {
         // Configurar el EditText para propagar el evento de touch al touchFeedback
         editText.setOnTouchListener { view, event ->
-            // Crear un nuevo evento con las coordenadas transformadas
-            createTransformedTouchEvent(view, event)?.let { transformedEvent ->
-                touchFeedback.dispatchTouchEvent(transformedEvent)
+            // Solo propagamos el evento si el EditText no tiene foco
+            if (!editText.hasFocus()) {
+                createTransformedTouchEvent(view, event)?.let { transformedEvent ->
+                    touchFeedback.dispatchTouchEvent(transformedEvent)
+                }
             }
             // Permitir que el EditText también procese el evento
             false
