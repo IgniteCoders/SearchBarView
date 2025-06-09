@@ -23,7 +23,7 @@ Add the dependency:
 
 ```gradle
 dependencies {
-    implementation("com.github.IgniteCoders:SearchBarView:1.0.0")
+    implementation("com.github.IgniteCoders:SearchBarView:1.0.1")
 }
 ```
 
