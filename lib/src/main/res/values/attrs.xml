@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SearchBarView">
+        <!-- Basic -->
+        <attr name="text" format="string|reference" />
+        <attr name="hint" format="string|reference" />
+
+        <!-- Text Appearance -->
+        <attr name="textColor" format="color|reference" />
+        <attr name="hintTextColor" format="color|reference" />
+        <attr name="textAppearance" format="reference" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+        <attr name="textFont" format="reference" />
+
+        <!-- Icons -->
+        <attr name="leadingIcon" format="reference" />
+        <attr name="clearIcon" format="reference" />
+        <attr name="leadingIconSize" format="dimension" />
+        <attr name="clearIconSize" format="dimension" />
+        <attr name="leadingIconPadding" format="dimension" />
+        <attr name="clearIconPadding" format="dimension" />
+        <attr name="iconTint" format="color" />
+
+        <!-- Layout -->
+        <attr name="height" format="dimension" />
+        <attr name="paddingHorizontal" format="dimension" />
+        <attr name="paddingVertical" format="dimension" />
+        <attr name="elevation" format="dimension" />
+        <attr name="cornerRadius" format="dimension" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+
+        <!-- Input configuration -->
+        <attr name="maxLines" format="integer" />
+        <attr name="maxLength" format="integer" />
+        <attr name="inputType" format="flags">
+            <flag name="text" value="0x00000001" />
+            <flag name="textCapCharacters" value="0x00001001" />
+            <flag name="textCapWords" value="0x00002001" />
+            <flag name="textCapSentences" value="0x00004001" />
+            <flag name="textAutoCorrect" value="0x00008001" />
+            <flag name="textAutoComplete" value="0x00010001" />
+            <flag name="textMultiLine" value="0x00020001" />
+            <flag name="textImeMultiLine" value="0x00040001" />
+            <flag name="textNoSuggestions" value="0x00080001" />
+            <flag name="textUri" value="0x00000011" />
+            <flag name="textEmailAddress" value="0x00000021" />
+            <flag name="textEmailSubject" value="0x00000031" />
+            <flag name="textShortMessage" value="0x00000041" />
+            <flag name="textLongMessage" value="0x00000051" />
+            <flag name="textPersonName" value="0x00000061" />
+            <flag name="textPostalAddress" value="0x00000071" />
+            <flag name="textPassword" value="0x00000081" />
+            <flag name="textVisiblePassword" value="0x00000091" />
+            <flag name="textWebEditText" value="0x000000a1" />
+            <flag name="textFilter" value="0x000000b1" />
+            <flag name="textPhonetic" value="0x000000c1" />
+            <flag name="textWebEmailAddress" value="0x000000d1" />
+            <flag name="textWebPassword" value="0x000000e1" />
+            <flag name="number" value="0x00000002" />
+            <flag name="numberSigned" value="0x00001002" />
+            <flag name="numberDecimal" value="0x00002002" />
+            <flag name="numberPassword" value="0x00000012" />
+            <flag name="phone" value="0x00000003" />
+            <flag name="datetime" value="0x00000004" />
+            <flag name="date" value="0x00000014" />
+            <flag name="time" value="0x00000024" />
+        </attr>
+        <attr name="imeOptions" format="flags">
+            <flag name="normal" value="0x00000000" />
+            <flag name="actionUnspecified" value="0x00000000" />
+            <flag name="actionNone" value="0x00000001" />
+            <flag name="actionGo" value="0x00000002" />
+            <flag name="actionSearch" value="0x00000003" />
+            <flag name="actionSend" value="0x00000004" />
+            <flag name="actionNext" value="0x00000005" />
+            <flag name="actionDone" value="0x00000006" />
+            <flag name="actionPrevious" value="0x00000007" />
+        </attr>
+        <attr name="enabled" format="boolean" />
+    </declare-styleable>
+</resources> 

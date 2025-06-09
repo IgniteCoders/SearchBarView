@@ -8,10 +8,11 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <com.ignite.searchbarview.SearchBarView
+    <com.ignite.material.searchbarview.SearchBarView
         android:id="@+id/searchBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:hint="Enter text to filter"/>
 
     <com.google.android.material.search.SearchBar
         android:layout_width="match_parent"

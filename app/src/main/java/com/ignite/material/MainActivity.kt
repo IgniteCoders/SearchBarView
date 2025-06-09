@@ -1,10 +1,11 @@
-package com.ignite.searchbarview
+package com.ignite.material
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ignite.material.searchbarview.SearchBarView
 
 class MainActivity : AppCompatActivity() {
 

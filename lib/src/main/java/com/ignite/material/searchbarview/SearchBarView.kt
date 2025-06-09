@@ -1,4 +1,4 @@
-package com.ignite.searchbarview
+package com.ignite.material.searchbarview
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -141,14 +141,22 @@ class SearchBarView @JvmOverloads constructor(
     private fun initializeAttributes(attrs: AttributeSet?) {
         context.withStyledAttributes(attrs, R.styleable.SearchBarView) {
             // Basic
+
             val text = getResourceId(R.styleable.SearchBarView_text, 0)
             if (text != 0) {
                 editText.setText(text)
+            } else {
+                editText.setText(getText(R.styleable.SearchBarView_text))
             }
-            
-            val hint = getResourceId(R.styleable.SearchBarView_hint, com.google.android.material.R.string.abc_search_hint)
+
+            val hint = getResourceId(R.styleable.SearchBarView_hint, 0)
             if (hint != 0) {
                 editText.setHint(hint)
+            } else {
+                editText.hint = getText(R.styleable.SearchBarView_hint)
+            }
+            if (editText.hint.isNullOrEmpty()) {
+                editText.hint = context.getString(com.google.android.material.R.string.abc_search_hint)
             }
             
             // Text Appearance
@@ -182,6 +190,14 @@ class SearchBarView @JvmOverloads constructor(
             }
 
             // Icons
+            val leadingIcon = getResourceId(R.styleable.SearchBarView_leadingIcon, 0)
+            if (leadingIcon != 0) {
+                setLeadingIcon(leadingIcon)
+            }
+            val clearIcon = getResourceId(R.styleable.SearchBarView_clearIcon, 0)
+            if (clearIcon != 0) {
+                setClearIcon(clearIcon)
+            }
             val leadingIconSize = getDimensionPixelSize(
                 R.styleable.SearchBarView_leadingIconSize,
                 resources.getDimensionPixelSize(R.dimen.search_bar_icon_size_default)
@@ -394,6 +410,7 @@ class SearchBarView @JvmOverloads constructor(
         editText.isEnabled = enabled
         iconSearch.isEnabled = enabled
         iconClear.isEnabled = enabled
+        touchFeedback.isEnabled = enabled
         alpha = if (enabled) 1f else 0.5f
     }
 
@@ -431,4 +448,4 @@ class SearchBarView @JvmOverloads constructor(
     interface OnQueryTextSubmitListener {
         fun onQueryTextSubmit(query: String)
     }
-}
+} 

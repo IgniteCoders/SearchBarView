@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SearchBarView"
 include(":app")
+include(":lib")
  
