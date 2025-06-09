@@ -23,7 +23,18 @@ Add the dependency:
 
 ```gradle
 dependencies {
-    implementation 'com.github.IgniteCoders:SearchBarView:1.0.0'
+    implementation("com.github.IgniteCoders:SearchBarView:1.0.0")
+}
+```
+
+Add the jitpack repository to you setting.gradle.kts:
+```gradle
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
 }
 ```
 

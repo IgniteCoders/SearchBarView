@@ -1,7 +1,3 @@
 <resources>
     <string name="app_name">SearchBarView</string>
-
-    <string name="search">Search</string>
-    <string name="search_hint">Search…</string>
-    <string name="search_clear">Clear text</string>
 </resources>
