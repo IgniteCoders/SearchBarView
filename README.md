@@ -1,6 +1,6 @@
 # Search Bar View
 
-[Search bar view](https://m3.material.io/components/search/overview) is a Material Design component that helps users to search through a collection of content.
+[Search Bar](https://m3.material.io/components/search/overview) is a Material Design component that helps users to search through a collection of content using a Search View component.
 
 This implementation provides a direct input search bar that follows Material Design 3 guidelines while maintaining the ability to be customized.
 
@@ -126,7 +126,7 @@ All colors and dimensions can be customized through XML attributes or programmat
 |---------|-----------|------------------|---------------|
 | Search icon | `app:leadingIcon` | `setLeadingIcon()` | `@drawable/ic_search` |
 | Clear icon | `app:clearIcon` | `setClearIcon()` | `@drawable/ic_clear` |
-| Icon size | `app:leadingIconSize` | `setLeadingIconSize()` | `24dp` |
+| Search icon size | `app:leadingIconSize` | `setLeadingIconSize()` | `24dp` |
 | Clear icon size | `app:clearIconSize` | `setClearIconSize()` | `24dp` |
 | Icon tint | `app:iconTint` | `setIconTint()` | `?attr/colorOnSurfaceVariant` |
 
@@ -134,11 +134,11 @@ All colors and dimensions can be customized through XML attributes or programmat
 
 | Element | Attribute | Related method(s) | Default value |
 |---------|-----------|------------------|---------------|
-| Enabled | `app:searchEnabled` | `setEnabled()` | `true` |
-| Max lines | `app:searchMaxLines` | `setSearchMaxLines()` | `1` |
-| Max length | `app:searchMaxLength` | `setSearchMaxLength()` | No limit |
-| Input type | `app:searchInputType` | `setSearchInputType()` | `text` |
-| IME options | `app:searchImeOptions` | `setSearchImeOptions()` | `actionSearch` |
+| Enabled | `app:enabled` | `setEnabled()` | `true` |
+| Max lines | `app:maxLines` | `setMaxLines()` | `1` |
+| Max length | `app:maxLength` | `setMaxLength()` | No limit |
+| Input type | `app:inputType` | `setInputType()` | `text` |
+| IME options | `app:imeOptions` | `setImeOptions()` | `actionSearch` |
 
 ## States
 
