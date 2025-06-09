@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ignite.material"
+    namespace = "com.ignite.material.searchbarview"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.ignite.material"
+        applicationId = "com.ignite.material.searchbarview"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
