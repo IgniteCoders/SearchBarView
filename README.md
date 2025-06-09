@@ -18,6 +18,7 @@ This implementation provides a direct input search bar that follows Material Des
 The search bar provides a text input field with search and clear icons. It supports both direct text input and search submission.
 
 ### Installation
+[![](https://jitpack.io/v/IgniteCoders/SearchBarView.svg)](https://jitpack.io/#IgniteCoders/SearchBarView)
 
 Add the dependency:
 
@@ -41,7 +42,7 @@ dependencyResolutionManagement {
 ### Basic usage
 
 ```xml
-<com.ignite.searchbarview.SearchBarView
+<com.ignite.material.searchbarview.SearchBarView
     android:id="@+id/searchBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
@@ -62,7 +63,7 @@ searchBar.setOnQueryTextSubmitListener { query ->
 ### XML attributes example
 
 ```xml
-<com.ignite.searchbarview.SearchBarView
+<com.ignite.material.searchbarview.SearchBarView
     android:id="@+id/searchBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -178,6 +179,6 @@ The search bar has two focus states:
 ## License
 
 ```
-Copyright 2024 Ignite
+Copyright 2024 IgniteCoders
 Licensed under the Apache License, Version 2.0 (the "License");
 ``` 
